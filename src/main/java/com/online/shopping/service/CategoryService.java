@@ -2,6 +2,8 @@ package com.online.shopping.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +18,9 @@ public class CategoryService {
 	public List<Category> findAll(){
 		return categoryRepository.findAll();
 	}
+	@Transactional
 	public Category findCategoryById(Integer id) {
-		return categoryRepository.getById(id);
+		return categoryRepository.findById(id).get();
 	}
 	public void addCategory(Category category) {
 		categoryRepository.save(category);

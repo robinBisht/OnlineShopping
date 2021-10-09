@@ -2,6 +2,8 @@ package com.online.shopping.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +18,9 @@ public class CustomerService {
 	public List<Customer> viewAllCustomers(){
 		return customerRepository.findAll();
 	}
-	
+	@Transactional
 	public Customer viewCustomer(Integer id) {
-		return customerRepository.getById(id);
+		return customerRepository.findById(id).get();
 	}
 	public void removeCustomer(Customer customer) {
 		customerRepository.delete(customer);

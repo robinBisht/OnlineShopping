@@ -3,6 +3,8 @@ package com.online.shopping.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +29,9 @@ public class AddressService {
 	public List<Address> viewAllAddress(){
 		return addressRepo.findAll();
 	}
+	@Transactional
 	public Address viewAddress(Integer id) {
-		Address address =  addressRepo.getById(id);
-		return address;
+		Optional<Address> address =  addressRepo.findById(id);
+		return address.get();
 	}
 }

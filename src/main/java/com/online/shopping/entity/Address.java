@@ -28,11 +28,12 @@ public class Address {
 	
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="cusotmer_id")
+	@JoinColumn(name="cusotmer_address_id")
 	private Customer customer;
 	
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="order_address_id")
 	private Order addressOrder;
 	
 	

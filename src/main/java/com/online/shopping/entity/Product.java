@@ -19,6 +19,8 @@ import javax.persistence.Table;
 
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -29,7 +31,6 @@ public class Product {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	
 	private int productId;
 	
 	private String productName;
@@ -51,17 +52,21 @@ public class Product {
 	private Category category;
 	
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="cart_id")
-	private Cart cart;
+	@ManyToMany(fetch = FetchType.LAZY,cascade = {
+			CascadeType.PERSIST,CascadeType.MERGE
+	})
+	@JoinTable(name="products_carts",joinColumns = {
+			@JoinColumn(name="product_id",referencedColumnName = "productId")},
+	inverseJoinColumns = {@JoinColumn(name="cart_id",referencedColumnName ="cartId")  })
+	private Set<Cart> carts = new HashSet<>();
 	
 	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY,cascade = {
 			CascadeType.PERSIST,CascadeType.MERGE
 	})
 	@JoinTable(name="products_orders",joinColumns = {
-			@JoinColumn(name="order_id",referencedColumnName = "productId")},
-	inverseJoinColumns = {@JoinColumn(name="product_id",referencedColumnName ="orderId")  })
+			@JoinColumn(name="prodcut_id",referencedColumnName = "productId")},
+	inverseJoinColumns = {@JoinColumn(name="order_id",referencedColumnName ="orderId")  })
 	private Set<Order> orders = new HashSet<>();
 	
 	public Product() {
@@ -151,12 +156,15 @@ public class Product {
 		this.category = category;
 	}
 
-	public Cart getCart() {
-		return cart;
+	public Set<Cart> getCarts() {
+		return carts;
 	}
 
 	public void setCart(Cart cart) {
-		this.cart = cart;
+		this.carts.add(cart);
+	}
+	public void setCarts(Set<Cart> carts) {
+		this.carts = carts;
 	}
 
 	public Set<Order> getOrders() {

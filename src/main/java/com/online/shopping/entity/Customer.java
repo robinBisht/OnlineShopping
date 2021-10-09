@@ -10,15 +10,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 
 @Entity
-
 public class Customer {
 	
 	@Id
@@ -40,7 +35,7 @@ public class Customer {
 	
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY,mappedBy = "customer",cascade = CascadeType.ALL)
-	private Order customerOrder;
+	private Order order;
 	
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY,mappedBy = "customer",cascade = CascadeType.ALL)
@@ -106,11 +101,11 @@ public class Customer {
 	}
 
 	public Order getOrder() {
-		return customerOrder;
+		return order;
 	}
 
-	public void setOrder(Order customerOrder) {
-		this.customerOrder = customerOrder;
+	public void setOrder(Order order) {
+		this.order = order;
 	}
 
 	public User getUser() {

@@ -23,7 +23,7 @@ import com.online.shopping.service.OrderService;
 import com.online.shopping.service.ProductService;
 
 @RestController
-@RequestMapping(path = "/customer")
+@RequestMapping("/orders")
 public class OrderController {
 	@Autowired
 	private OrderService orderService;
@@ -32,16 +32,16 @@ public class OrderController {
 	@Autowired
 	private ProductService productService;
 	
-	@GetMapping("/{cid}/orders")
-	public List<Order> getOrders(@PathVariable("cid") Integer customerId) {
-		return orderService.viewAllOrderByUserId(customerId);
+	@GetMapping("")
+	public List<Order> getOrders(){
+		return orderService.viewAllOrder();
 	}
-	@GetMapping("/{cid}/orders/{oid}")
+	@GetMapping("/{oid}")
 	public Order getOrderById(@PathVariable("oid") Integer orderId) {
 		return orderService.viewOrderById(orderId);
 	}
 	@Transactional
-	@PostMapping("/{cid}/orders/create/{pid}")
+	@PostMapping("/customer/{cid}/product/{pid}/create")
 	public ResponseEntity<Order> createNew(@RequestBody Order order,@PathVariable("cid") Integer customerId, @PathVariable("pid") Integer productId ) {
 		Customer customer = customerService.viewCustomer(customerId);
 		Product product = productService.viewProduct(productId);
@@ -54,13 +54,13 @@ public class OrderController {
 		return ResponseEntity.ok(order);
 	}
 	@Transactional
-	@PutMapping("/{cid}/orders/{oid}/update")
+	@PutMapping("/{oid}/update")
 	public ResponseEntity<Order> update(@RequestBody Order order,@PathVariable("cid") Integer customerId, @PathVariable("oid") Integer orderId ) {
 		order.setOrderId(orderId);
 		orderService.updateOrder(order);
 		return ResponseEntity.ok(order);
 	}
-	@DeleteMapping("/{cid}/orders/{oid}/delete")
+	@DeleteMapping("/{oid}/delete")
 	public ResponseEntity delete(@PathVariable("oid") Integer orderId) {
         orderService.removeOrder(orderId);
         return ResponseEntity.ok().build();

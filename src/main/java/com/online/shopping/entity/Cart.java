@@ -4,12 +4,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 //import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -20,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-@Table(name="cart")
 public class Cart {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,12 +29,14 @@ public class Cart {
 	
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="customer_id")
+	@JoinColumn(name="customer_cart_id")
 	private Customer customer;
 	
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY,mappedBy = "cart")
-	private Set<Product> products = new HashSet<Product>();
+	@ManyToMany(mappedBy="carts",fetch = FetchType.LAZY,cascade = {
+			CascadeType.PERSIST,CascadeType.MERGE
+	})
+	private Set<Product> products = new HashSet<>();
 	
 	public Cart() {
 	}
@@ -60,13 +63,12 @@ public class Cart {
 
 	public void setProduct(Product product) {
 		products.add(product);
-		product.setCart(this);
 	}
 	public void setProducts( Set<Product> products ) {
 		this.products = products;
-		for( Product product: products ) {
-			product.setCart(this);
-		}
+	}
+	public void removeProduct(Product product) {
+		this.products.remove(product);
 	}
 	
 }

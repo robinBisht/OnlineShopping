@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.online.shopping.entity.Cart;
+import com.online.shopping.entity.Customer;
 import com.online.shopping.entity.Product;
 import com.online.shopping.repository.CartRepository;
+import com.online.shopping.repository.CustomerRepository;
 import com.online.shopping.repository.ProductRepository;
 
 @Service
@@ -19,33 +21,24 @@ public class CartService {
 	private CartRepository cartRepository;
 	@Autowired
 	private ProductRepository productRepository;
+	@Autowired
+	private CustomerRepository customerRepository;
 	
 	@Transactional
-	public Cart addProductToCart(Cart cart,Product product) {
-		Product productFromRepository = productRepository.getById(product.getProductId());
-		cart.setProduct(productFromRepository);
-		productFromRepository.setCart(cart);
-		productRepository.save(productFromRepository);
-		cartRepository.save(cart);
-		return cart;
+	public Cart addProductToCart(Cart cart,Integer productId,Integer customerId) {
+		Product product = productRepository.findById(productId).get();
+		Customer customer = customerRepository.findById(customerId).get();
+		cart.setProduct(product);
+		cart.setCustomer(customer);
+		return cartRepository.save(cart);
 	}
 	
 	@Transactional
-	public void removeProductFromCart( Cart cart, Product product ) {
-		Product productFromRepository = productRepository.getById(product.getProductId());
-		Cart cartFromRepsitory = cartRepository.getById(cart.getCartId());
-		Set<Product> setOfProducts = cartFromRepsitory.getProducts();
-		Set<Product> newSetOfProducts = new HashSet<>();
-		for( Product prod : setOfProducts ) {
-			if( prod.getProductId() == productFromRepository.getProductId() ) {
-				continue;
-			}
-			newSetOfProducts.add(prod);
-		}
-		cartFromRepsitory.setProducts(newSetOfProducts);
-		productFromRepository.setCart(null);
-		cartRepository.save(cartFromRepsitory);
-		productRepository.save(productFromRepository);
+	public void removeProductFromCart( Integer cartId, Integer productId ) {
+		Cart cart = cartRepository.findById(cartId).get();
+		Product productToDelete = productRepository.findById(productId).get();
+		cart.removeProduct(productToDelete);
+		
 	}
 	@Transactional
 	public void removeAllProducts(Cart cart) {
@@ -53,4 +46,14 @@ public class CartService {
 		cartFromRepoitory.setProducts(new HashSet<Product>());
 		cartRepository.save(cart);
 	}
+	@Transactional
+	public void removeCart(Integer cartId) {
+		Cart cart = cartRepository.findById(cartId).get();
+		Set<Product> productSet = cart.getProducts();
+		for( Product product: productSet ) {
+			product.getCarts().remove(cart);
+		}
+		cartRepository.delete(cart);
+	}
+	
 }

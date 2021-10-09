@@ -1,7 +1,10 @@
 package com.online.shopping.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +25,10 @@ public class ProductService {
 		productRepo.save(product); 
 	}
 	
+	@Transactional
 	public Product viewProduct(Integer id) {
-		return productRepo.getById(id);
+		Optional<Product> product = productRepo.findById(id);
+		return product.get();
 	}
 	
 	public void removeProduct(Integer id) {
