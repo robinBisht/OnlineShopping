@@ -3,6 +3,7 @@ package com.online.shopping.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 public class Product {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	
 	private int productId;
 	
@@ -46,7 +47,7 @@ public class Product {
 	private int quantity;
 	
 	@JsonIgnore
-	@OneToOne(fetch = FetchType.LAZY,mappedBy="product")
+	@OneToOne(fetch = FetchType.LAZY,mappedBy="product",cascade = CascadeType.ALL)
 	private Category category;
 	
 	@JsonIgnore
@@ -55,7 +56,9 @@ public class Product {
 	private Cart cart;
 	
 	@JsonIgnore
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY,cascade = {
+			CascadeType.PERSIST,CascadeType.MERGE
+	})
 	@JoinTable(name="products_orders",joinColumns = {
 			@JoinColumn(name="order_id",referencedColumnName = "productId")},
 	inverseJoinColumns = {@JoinColumn(name="product_id",referencedColumnName ="orderId")  })

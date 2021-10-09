@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 public class Customer {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int customerId;
 	private String firstName;
 	private String lastName;
@@ -39,19 +39,18 @@ public class Customer {
 	private User user;
 	
 	@JsonIgnore
-	@OneToOne(fetch = FetchType.LAZY,mappedBy = "customer")
+	@OneToOne(fetch = FetchType.LAZY,mappedBy = "customer",cascade = CascadeType.ALL)
 	private Order customerOrder;
 	
 	@JsonIgnore
-	@OneToOne(fetch = FetchType.LAZY,mappedBy = "customer")
+	@OneToOne(fetch = FetchType.LAZY,mappedBy = "customer",cascade = CascadeType.ALL)
 	private Cart cart;
 	
 	public Customer() {
 		
 	}
 
-	public Customer(int customerId, String firstName, String lastName, String mobileNumber, String email) {
-		this.customerId = customerId;
+	public Customer( String firstName, String lastName, String mobileNumber, String email) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.mobileNumber = mobileNumber;

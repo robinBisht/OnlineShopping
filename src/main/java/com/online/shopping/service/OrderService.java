@@ -22,9 +22,8 @@ public class OrderService {
 	public Order updateOrder(Order order) {
 		return orderRepository.save(order);
 	}
-	public void removeOrder(Order order, Integer customerId) {
-		
-		orderRepository.delete(order);
+	public void removeOrder(Integer orderId) {
+		orderRepository.deleteById(orderId);
 	}
 	public List<Order> viewAllOrder(){
 		return orderRepository.findAll();

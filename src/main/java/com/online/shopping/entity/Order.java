@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -43,7 +44,9 @@ public class Order {
 	private Address address;
 	
 	@JsonIgnore
-	@ManyToMany(mappedBy="orders",fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy="orders",fetch = FetchType.LAZY,cascade = {
+			CascadeType.PERSIST,CascadeType.MERGE
+	})
 	private Set<Product> products = new HashSet<>();
 	
 	public Order() {

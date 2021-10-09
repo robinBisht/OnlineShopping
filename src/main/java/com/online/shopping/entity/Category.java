@@ -27,8 +27,7 @@ public class Category {
 		
 	}
 	
-	public Category(int catId,String categoryName) {
-		this.catId = catId;
+	public Category(String categoryName) {
 		this.categoryName = categoryName;
 	}
 

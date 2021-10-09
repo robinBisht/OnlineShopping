@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,7 @@ import com.online.shopping.service.OrderService;
 import com.online.shopping.service.ProductService;
 
 @RestController
+@RequestMapping(path = "/customer")
 public class OrderController {
 	@Autowired
 	private OrderService orderService;
@@ -30,21 +32,19 @@ public class OrderController {
 	@Autowired
 	private ProductService productService;
 	
-	@GetMapping("/customer/{id}/order")
-	public List<Order> getOrders(@PathVariable("id") Integer customerId) {
+	@GetMapping("/{cid}/orders")
+	public List<Order> getOrders(@PathVariable("cid") Integer customerId) {
 		return orderService.viewAllOrderByUserId(customerId);
 	}
-	@GetMapping("/customer/{cid}/orders/{oid}")
+	@GetMapping("/{cid}/orders/{oid}")
 	public Order getOrderById(@PathVariable("oid") Integer orderId) {
 		return orderService.viewOrderById(orderId);
 	}
 	@Transactional
-	@PostMapping("/customer/{cid}/order/create/{pid}")
+	@PostMapping("/{cid}/orders/create/{pid}")
 	public ResponseEntity<Order> createNew(@RequestBody Order order,@PathVariable("cid") Integer customerId, @PathVariable("pid") Integer productId ) {
 		Customer customer = customerService.viewCustomer(customerId);
 		Product product = productService.viewProduct(productId);
-		product.setOrder(order);
-		customer.setOrder(order);
 		order.setAddress(customer.getAddress());
 		order.setCustomer(customer);
 		order.setProduct(product);
@@ -54,10 +54,15 @@ public class OrderController {
 		return ResponseEntity.ok(order);
 	}
 	@Transactional
-	@PutMapping("/customer/{cid}/order/update/{oid}")
+	@PutMapping("/{cid}/orders/{oid}/update")
 	public ResponseEntity<Order> update(@RequestBody Order order,@PathVariable("cid") Integer customerId, @PathVariable("oid") Integer orderId ) {
 		order.setOrderId(orderId);
 		orderService.updateOrder(order);
 		return ResponseEntity.ok(order);
 	}
+	@DeleteMapping("/{cid}/orders/{oid}/delete")
+	public ResponseEntity delete(@PathVariable("oid") Integer orderId) {
+        orderService.removeOrder(orderId);
+        return ResponseEntity.ok().build();
+    }
 }
