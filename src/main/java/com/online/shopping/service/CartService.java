@@ -18,42 +18,44 @@ import com.online.shopping.repository.ProductRepository;
 @Service
 public class CartService {
 	@Autowired
-	private CartRepository cartRepository;
-	@Autowired
 	private ProductRepository productRepository;
 	@Autowired
 	private CustomerRepository customerRepository;
 	
-	@Transactional
-	public Cart addProductToCart(Cart cart,Integer productId,Integer customerId) {
-		Product product = productRepository.findById(productId).get();
+	public Cart getCustomerCart(Integer customerId ) {
 		Customer customer = customerRepository.findById(customerId).get();
-		cart.setProduct(product);
-		cart.setCustomer(customer);
-		return cartRepository.save(cart);
+		Cart cart = customer.getCart();
+		return cart;
 	}
 	
-	@Transactional
-	public void removeProductFromCart( Integer cartId, Integer productId ) {
-		Cart cart = cartRepository.findById(cartId).get();
-		Product productToDelete = productRepository.findById(productId).get();
-		cart.removeProduct(productToDelete);
-		
+	public Cart addProductToCart(Integer productId,Integer customerId) {
+		Product product = productRepository.findById(productId).get();
+		Customer customer = customerRepository.findById(customerId).get();
+		Cart cart = customer.getCart();
+		cart.setProduct(product);
+		product.setCart(cart);
+		customer.setCart(cart);
+		customerRepository.save(customer);
+		productRepository.save(product);
+		return cart;
 	}
-	@Transactional
-	public void removeAllProducts(Cart cart) {
-		Cart cartFromRepoitory = cartRepository.getById(cart.getCartId());
-		cartFromRepoitory.setProducts(new HashSet<Product>());
-		cartRepository.save(cart);
+	
+	public void removeProductFromCart( Integer customerId, Integer productId ) {
+		Customer customer = customerRepository.findById(customerId).get();
+		Product product = productRepository.findById(productId).get();
+		Cart cart = customer.getCart();
+		product.getCarts().remove( cart );
+		cart.getProducts().remove(product);		
+		customer.setCart(cart);
+		customerRepository.save(customer);
 	}
-	@Transactional
-	public void removeCart(Integer cartId) {
-		Cart cart = cartRepository.findById(cartId).get();
-		Set<Product> productSet = cart.getProducts();
-		for( Product product: productSet ) {
-			product.getCarts().remove(cart);
-		}
-		cartRepository.delete(cart);
+	
+	public void removeAllProducts(Integer customerId) {
+		Customer customer = customerRepository.findById(customerId).get();
+		Cart cart = customer.getCart();
+		cart.setProducts(new HashSet<Product>());
+		customer.setCart(cart);
+		customerRepository.save(customer);
 	}
 	
 }

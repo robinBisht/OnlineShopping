@@ -15,8 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.online.shopping.entity.Address;
+import com.online.shopping.entity.Cart;
 import com.online.shopping.entity.Customer;
 import com.online.shopping.entity.Product;
+import com.online.shopping.repository.CartRepository;
+import com.online.shopping.service.AddressService;
 import com.online.shopping.service.CustomerService;
 import com.online.shopping.service.ProductService;
 
@@ -25,6 +29,10 @@ import com.online.shopping.service.ProductService;
 public class CustomerController {
 	@Autowired
 	private CustomerService customerService;
+	@Autowired
+	private AddressService addressService;
+	@Autowired
+	private CartRepository cartRepository;
 	
 	@GetMapping("")
 	public List<Customer> findAll(){
@@ -39,7 +47,10 @@ public class CustomerController {
 	        consumes = MediaType.APPLICATION_JSON_VALUE,
 	        produces = MediaType.APPLICATION_JSON_VALUE
 	)
-	public ResponseEntity<Customer> createNew(@RequestBody Customer customer) {
+	public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
+		Cart cart = new Cart();
+		customer.setCart(cart);
+		cart.setCustomer(customer);
 		customerService.addCustomer(customer);
 		return ResponseEntity.ok(customer);
 	}
@@ -56,4 +67,15 @@ public class CustomerController {
         customerService.removeCustomerById(customerId);
         return ResponseEntity.ok().build();
     }
+	
+	@PostMapping("/{id}/address/{aid}/create")
+	public Address addAddress(@PathVariable("id") Integer customerId, @PathVariable("aid") Integer addressId  ) {
+		Address address = addressService.viewAddress(addressId);
+		Customer customer = customerService.viewCustomer(addressId);
+		customer.setAddress(address);
+		address.setCustomer(customer);
+		addressService.addAddress(address);
+		return address;
+	}
+	
 }

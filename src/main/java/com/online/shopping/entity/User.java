@@ -4,6 +4,8 @@ import javax.persistence.CascadeType;
 //import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -11,6 +13,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import net.bytebuddy.dynamic.loading.ClassReloadingStrategy.Strategy;
 //import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -18,7 +22,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class User {
 	
 	@Id
-	private String userId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int userId;
+	private String username;
 	private String password;
 	private String role;
 	
@@ -35,16 +41,23 @@ public class User {
 	public User() {
 		
 	}
-	public User(String userId, String password, String role) {
-		this.userId = userId;
+	public User(String username, String password, String role) {
+		this.username = username;
 		this.password = password;
 		this.role = role;
 	}
-	public String getUserId() {
+	public int getUserId() {
 		return userId;
 	}
-	public void setUserId(String userId) {
+	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+	
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	public String getPassword() {
 		return password;
