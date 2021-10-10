@@ -47,12 +47,17 @@ public class CartService {
 		product.getCarts().remove( cart );
 		cart.getProducts().remove(product);		
 		customer.setCart(cart);
+		productRepository.save(product);
 		customerRepository.save(customer);
 	}
 	
 	public void removeAllProducts(Integer customerId) {
 		Customer customer = customerRepository.findById(customerId).get();
 		Cart cart = customer.getCart();
+		Set<Product> productsInCart = cart.getProducts();
+		for(Product product : productsInCart  ) {
+			product.getCarts().remove(cart);
+		}
 		cart.setProducts(new HashSet<Product>());
 		customer.setCart(cart);
 		customerRepository.save(customer);
