@@ -29,11 +29,6 @@ public class Customer {
 	private Address address;
 	
 	@JsonIgnore
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="user_id")
-	private User user;
-	
-	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY,mappedBy = "customer",cascade = CascadeType.ALL)
 	private Order order;
 	
@@ -106,14 +101,6 @@ public class Customer {
 
 	public void setOrder(Order order) {
 		this.order = order;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
 	}
 
 	public Cart getCart() {

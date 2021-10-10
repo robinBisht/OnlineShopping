@@ -29,7 +29,7 @@ public class Cart {
 	
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="customer_cart_id")
+	@JoinColumn(name="customer_id")
 	private Customer customer;
 	
 	@JsonIgnore

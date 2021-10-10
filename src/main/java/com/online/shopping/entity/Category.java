@@ -1,5 +1,6 @@
 package com.online.shopping.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -20,8 +21,7 @@ public class Category {
 	private String categoryName;
 	
 	@JsonIgnore
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "product_category_id")
+	@OneToOne(fetch = FetchType.LAZY,mappedBy = "category",cascade = CascadeType.ALL)
 	private Product product;
 	
 	public Category() {

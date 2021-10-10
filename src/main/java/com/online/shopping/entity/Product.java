@@ -48,7 +48,8 @@ public class Product {
 	private int quantity;
 	
 	@JsonIgnore
-	@OneToOne(fetch = FetchType.LAZY,mappedBy="product",cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="category_id")
 	private Category category;
 	
 	@JsonIgnore

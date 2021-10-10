@@ -1,14 +1,17 @@
 package com.online.shopping.entity;
 
 import javax.persistence.CascadeType;
+//import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+//import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="users")
@@ -20,7 +23,13 @@ public class User {
 	private String role;
 	
 	@JsonIgnore
-	@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy="user")
+	@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	@JoinTable(name="users_customers",joinColumns = {
+			@JoinColumn(name="user_ids",referencedColumnName = "userId")
+	},
+	inverseJoinColumns = {
+			@JoinColumn(name="customer_ids",referencedColumnName = "customerId")
+	})
 	private Customer customer;
 	
 	public User() {

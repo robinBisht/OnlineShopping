@@ -1,15 +1,17 @@
 package com.online.shopping.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+//import javax.persistence.JoinTable;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
+//import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+//import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -28,13 +30,12 @@ public class Address {
 	
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="cusotmer_address_id")
-	private Customer customer;
+	@JoinColumn(name="cusotmer_id")
+	private Customer customer;	
 	
 	@JsonIgnore
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="order_address_id")
-	private Order addressOrder;
+	@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "address")
+	private Order orders;	
 	
 	
 	public Address() {
@@ -98,10 +99,10 @@ public class Address {
 		this.customer = customer;
 	}
 	
-	public Order getAddressOrder() {
-		return addressOrder;
+	public Order getOrders() {
+		return orders;
 	}
-	public void setAddressOrder(Order addressOrder) {
-		this.addressOrder = addressOrder;
+	public void setOrdesr(Order orders) {
+		this.orders = orders;
 	}
 }

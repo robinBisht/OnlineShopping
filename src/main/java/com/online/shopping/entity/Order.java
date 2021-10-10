@@ -36,12 +36,12 @@ public class Order {
 	
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="customer_order_id")
+	@JoinColumn(name="customer_id")
 	private Customer customer;
 	
 	@JsonIgnore
-	@OneToOne(fetch = FetchType.LAZY,mappedBy = "addressOrder")
-//	@JoinTable(name="address_id")
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="address_id")
 	private Address address;
 	
 	@JsonIgnore
