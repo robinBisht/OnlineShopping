@@ -27,10 +27,6 @@ import com.online.shopping.service.ProductService;
 public class OrderController {
 	@Autowired
 	private OrderService orderService;
-	@Autowired
-	private CustomerService customerService;
-	@Autowired
-	private ProductService productService;
 	
 	@GetMapping("")
 	public List<Order> getOrders(){
@@ -43,14 +39,7 @@ public class OrderController {
 	@Transactional
 	@PostMapping("/customer/{cid}/product/{pid}/create")
 	public ResponseEntity<Order> createNew(@RequestBody Order order,@PathVariable("cid") Integer customerId, @PathVariable("pid") Integer productId ) {
-		Customer customer = customerService.viewCustomer(customerId);
-		Product product = productService.viewProduct(productId);
-		order.setAddress(customer.getAddress());
-		order.setCustomer(customer);
-		order.setProduct(product);
-		customerService.updateCustomer(customer);
-		productService.updateProduct(product);
-		orderService.addOrder(order);
+		orderService.addOrder(customerId,productId,order);
 		return ResponseEntity.ok(order);
 	}
 	@Transactional

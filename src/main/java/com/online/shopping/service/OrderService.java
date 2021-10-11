@@ -13,14 +13,26 @@ import org.springframework.stereotype.Service;
 import com.online.shopping.entity.Customer;
 import com.online.shopping.entity.Order;
 import com.online.shopping.entity.Product;
+import com.online.shopping.repository.AddressRepository;
+import com.online.shopping.repository.CustomerRepository;
 import com.online.shopping.repository.OrderRepository;
+import com.online.shopping.repository.ProductRepository;
 
 @Service
 public class OrderService {
 	@Autowired
 	private OrderRepository orderRepository;
+	@Autowired
+	private CustomerRepository customerRepository;
+	@Autowired
+	private ProductRepository productRepository;
 	
-	public Order addOrder(Order order) {
+	public Order addOrder(Integer customerId,Integer productId, Order order) {
+		Customer customer = customerRepository.findById(customerId).get();
+		Product product = productRepository.findById(productId).get();
+		order.setAddress(customer.getAddress());
+		order.setCustomer(customer);
+		order.setProduct(product);
 		return orderRepository.save(order);
 	}
 	public Order updateOrder(Order order) {

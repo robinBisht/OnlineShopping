@@ -21,8 +21,8 @@ public class ProductService {
 		return productRepo.findAll();
 	}
 	
-	public void addProduct(Product product) {
-		productRepo.save(product); 
+	public Product addProduct(Product product) {
+		return productRepo.save(product); 
 	}
 	
 	@Transactional

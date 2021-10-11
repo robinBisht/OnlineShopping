@@ -29,10 +29,6 @@ import com.online.shopping.service.ProductService;
 public class CustomerController {
 	@Autowired
 	private CustomerService customerService;
-	@Autowired
-	private AddressService addressService;
-	@Autowired
-	private CartRepository cartRepository;
 	
 	@GetMapping("")
 	public List<Customer> findAll(){
@@ -48,9 +44,6 @@ public class CustomerController {
 	        produces = MediaType.APPLICATION_JSON_VALUE
 	)
 	public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
-		Cart cart = new Cart();
-		customer.setCart(cart);
-		cart.setCustomer(customer);
 		customerService.addCustomer(customer);
 		return ResponseEntity.ok(customer);
 	}
@@ -70,12 +63,7 @@ public class CustomerController {
 	
 	@PostMapping("/{id}/address/{aid}/create")
 	public Address addAddress(@PathVariable("id") Integer customerId, @PathVariable("aid") Integer addressId  ) {
-		Address address = addressService.viewAddress(addressId);
-		Customer customer = customerService.viewCustomer(addressId);
-		customer.setAddress(address);
-		address.setCustomer(customer);
-		addressService.addAddress(address);
-		return address;
+		return customerService.addAddress(customerId, addressId);
 	}
 	
 }

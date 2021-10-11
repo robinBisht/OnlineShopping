@@ -19,7 +19,9 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.online.shopping.entity.Product;
 
 @Entity
 public class Cart {
@@ -31,8 +33,8 @@ public class Cart {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="customer_id")
 	private Customer customer;
-	
-	@JsonIgnore
+
+	@JsonIgnoreProperties(value={"carts","productId","color","dimension","specification","manufacturer","quantity"})
 	@ManyToMany(mappedBy="carts",fetch = FetchType.LAZY,cascade = {
 			CascadeType.PERSIST,CascadeType.MERGE
 	})

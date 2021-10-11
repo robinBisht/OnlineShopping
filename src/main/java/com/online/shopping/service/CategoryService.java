@@ -22,11 +22,11 @@ public class CategoryService {
 	public Category findCategoryById(Integer id) {
 		return categoryRepository.findById(id).get();
 	}
-	public void addCategory(Category category) {
-		categoryRepository.save(category);
+	public Category addCategory(Category category) {
+		return categoryRepository.save(category);
 	}
-	public void updateCategory(Category category) {
-		categoryRepository.save(category);
+	public Category updateCategory(Category category) {
+		return categoryRepository.save(category);
 	}
 	public void deleteCategory(Category category) {
 		categoryRepository.delete(category);
